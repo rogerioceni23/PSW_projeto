@@ -3,8 +3,10 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import (
     Usuario,
+    Autor,
     Categoria,
-    
+    Livro,
+    UsuarioLivro,
 )
 
 
@@ -59,6 +61,16 @@ class UsuarioAdmin(UserAdmin):
     )
 
 
+@admin.register(Autor)
+class AutorAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "nome",
+        "data_nascimento",
+    )
+
+    search_fields = ("nome",)
+
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
@@ -69,3 +81,41 @@ class CategoriaAdmin(admin.ModelAdmin):
 
     search_fields = ("nome",)
 
+
+@admin.register(Livro)
+class LivroAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "titulo",
+        "ano_publicacao",
+    )
+
+    search_fields = (
+        "titulo",
+        "descricao",
+    )
+
+    list_filter = ("ano_publicacao",)
+
+    filter_horizontal = (
+        "autores",
+        "categorias",
+    )
+
+
+@admin.register(UsuarioLivro)
+class UsuarioLivroAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "usuario",
+        "livro",
+        "data_hora",
+    )
+
+    search_fields = (
+        "usuario__nome",
+        "usuario__username",
+        "livro__titulo",
+    )
+
+    list_filter = ("data_hora",)
