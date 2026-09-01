@@ -1,29 +1,34 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
 class Usuario(AbstractUser):
-    email = models.EmailField(unique=True)
+    nome = models.CharField(max_length=100)
+    rg = models.CharField(max_length=20)
+    cpf = models.CharField(max_length=14)
+    endereco = models.CharField(max_length=255)
+    foto = models.ImageField(upload_to="fotos/")
+    descricao = models.TextField()
+
+    livros = models.ManyToManyField(
+        "Livro",
+        through="UsuarioLivro",
+        related_name="usuarios",
+    )
 
     def __str__(self):
-        return self.username
+        return self.nome or self.username
 
-
-class Autor(models.Model):
+class Categoria(models.Model):
     nome = models.CharField(max_length=100)
-    biografia = models.TextField()
-    data_nascimento = models.DateField()
 
     def __str__(self):
         return self.nome
 
-
-class Categoria(models.Model):
-    nome = models.CharField(
-        max_length=100,
-        unique=True
-    )
+class Autor(models.Model):
+    nome = models.CharField(max_length=200)
+    biografia = models.TextField()
+    data_nascimento = models.DateField()
 
     def __str__(self):
         return self.nome
@@ -32,86 +37,43 @@ class Categoria(models.Model):
 class Livro(models.Model):
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
-    ano_publicacao = models.PositiveIntegerField()
-
-    autores = models.ManyToManyField(
-        Autor,
-        related_name="livros"
-    )
+    ano_publicacao = models.IntegerField()
+    capa = models.ImageField(upload_to="capas/")
+    arquivo_pdf = models.FileField(upload_to="pdfs/")
 
     categorias = models.ManyToManyField(
         Categoria,
-        related_name="livros"
+        related_name="livros",
+        db_table="livro_categoria",
     )
 
-    capa = models.ImageField(
-        upload_to="capas/",
-        blank=True,
-        null=True
-    )
-
-    arquivo_pdf = models.FileField(
-        upload_to="pdfs/",
-        blank=True,
-        null=True
+    autores = models.ManyToManyField(
+        Autor,
+        related_name="livros",
+        db_table="autor_livro",
     )
 
     def __str__(self):
         return self.titulo
 
 
-class Avaliacao(models.Model):
-    livro = models.ForeignKey(
-        Livro,
-        on_delete=models.CASCADE,
-        related_name="avaliacoes"
-    )
-
+class UsuarioLivro(models.Model):
     usuario = models.ForeignKey(
         Usuario,
         on_delete=models.CASCADE,
-        related_name="avaliacoes"
+        related_name="associacoes_livros",
     )
 
-    nota = models.PositiveSmallIntegerField(
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(5)
-        ]
+    livro = models.ForeignKey(
+        Livro,
+        on_delete=models.CASCADE,
+        related_name="associacoes_usuarios",
     )
 
-    comentario = models.TextField()
-
-    data_criacao = models.DateTimeField(
-        auto_now_add=True
-    )
+    data_hora = models.DateTimeField()
 
     class Meta:
-        ordering = ["-data_criacao"]
+        db_table = "usuario_livro"
 
     def __str__(self):
-        return (
-            f"{self.usuario.username} - "
-            f"{self.livro.titulo}"
-        )
-
-
-class Perfil(models.Model):
-    usuario = models.OneToOneField(
-        Usuario,
-        on_delete=models.CASCADE,
-        related_name="perfil"
-    )
-
-    foto = models.ImageField(
-        upload_to="perfis/",
-        blank=True,
-        null=True
-    )
-
-    descricao = models.TextField(
-        blank=True
-    )
-
-    def __str__(self):
-        return f"Perfil de {self.usuario.username}"
+        return f"{self.usuario} — {self.livro}"

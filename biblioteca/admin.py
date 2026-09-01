@@ -1,33 +1,63 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from .models import (
     Usuario,
     Autor,
     Categoria,
     Livro,
-    Avaliacao,
-    Perfil,
+    UsuarioLivro,
 )
 
 
 @admin.register(Usuario)
-class UsuarioAdmin(admin.ModelAdmin):
+class UsuarioAdmin(UserAdmin):
     list_display = (
         "id",
         "username",
-        "email",
+        "nome",
+        "cpf",
         "is_staff",
         "is_active",
     )
 
     search_fields = (
         "username",
-        "email",
+        "nome",
+        "cpf",
+        "rg",
     )
 
-    list_filter = (
-        "is_staff",
-        "is_active",
+    fieldsets = UserAdmin.fieldsets + (
+        (
+            "Dados pessoais",
+            {
+                "fields": (
+                    "nome",
+                    "rg",
+                    "cpf",
+                    "endereco",
+                    "foto",
+                    "descricao",
+                )
+            },
+        ),
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (
+            "Dados pessoais",
+            {
+                "fields": (
+                    "nome",
+                    "rg",
+                    "cpf",
+                    "endereco",
+                    "foto",
+                    "descricao",
+                )
+            },
+        ),
     )
 
 
@@ -39,9 +69,7 @@ class AutorAdmin(admin.ModelAdmin):
         "data_nascimento",
     )
 
-    search_fields = (
-        "nome",
-    )
+    search_fields = ("nome",)
 
 
 @admin.register(Categoria)
@@ -51,9 +79,7 @@ class CategoriaAdmin(admin.ModelAdmin):
         "nome",
     )
 
-    search_fields = (
-        "nome",
-    )
+    search_fields = ("nome",)
 
 
 @admin.register(Livro)
@@ -69,9 +95,7 @@ class LivroAdmin(admin.ModelAdmin):
         "descricao",
     )
 
-    list_filter = (
-        "ano_publicacao",
-    )
+    list_filter = ("ano_publicacao",)
 
     filter_horizontal = (
         "autores",
@@ -79,35 +103,19 @@ class LivroAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Avaliacao)
-class AvaliacaoAdmin(admin.ModelAdmin):
+@admin.register(UsuarioLivro)
+class UsuarioLivroAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "usuario",
         "livro",
-        "usuario",
-        "nota",
-        "data_criacao",
+        "data_hora",
     )
 
     search_fields = (
+        "usuario__nome",
+        "usuario__username",
         "livro__titulo",
-        "usuario__username",
-        "comentario",
     )
 
-    list_filter = (
-        "nota",
-        "data_criacao",
-    )
-
-
-@admin.register(Perfil)
-class PerfilAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "usuario",
-    )
-
-    search_fields = (
-        "usuario__username",
-    )
+    list_filter = ("data_hora",)
