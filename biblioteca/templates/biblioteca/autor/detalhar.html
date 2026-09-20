@@ -1,0 +1,63 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    {{ autor.nome }} | Biblioteca Digital
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">{{ autor.nome }}</h2>
+        </div>
+
+        {% if perms.biblioteca.change_autor %}
+            <div class="col-auto ms-auto">
+                <a
+                    href="{% url 'biblioteca:autor_editar' autor.id %}"
+                    class="btn btn-primary"
+                >
+                    Editar
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <p>
+            <strong>Data de nascimento:</strong>
+            {{ autor.data_nascimento|date:"d/m/Y" }}
+        </p>
+
+        <p>
+            <strong>Biografia:</strong><br>
+            {{ autor.biografia|linebreaksbr }}
+        </p>
+
+        <h3 class="card-title">Livros</h3>
+
+        <ul>
+            {% for livro in autor.livros.all %}
+                <li>
+                    <a href="{% url 'biblioteca:livro_detalhar' livro.id %}">
+                        {{ livro.titulo }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>Nenhum livro cadastrado para este autor.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card-footer">
+        <a
+            href="{% url 'biblioteca:autor_listar' %}"
+            class="btn"
+        >
+            Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Autores | Biblioteca Digital{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Autores</h2>
+        </div>
+
+        {% if perms.biblioteca.add_autor %}
+            <div class="col-auto ms-auto">
+                <a
+                    href="{% url 'biblioteca:autor_criar' %}"
+                    class="btn btn-primary"
+                >
+                    Cadastrar autor
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for autor in autores %}
+                    <tr>
+                        <td>{{ autor.nome }}</td>
+                        <td>{{ autor.data_nascimento|date:"d/m/Y" }}</td>
+
+                        <td>
+                            <a
+                                href="{% url 'biblioteca:autor_detalhar' autor.id %}"
+                                class="btn btn-sm"
+                            >
+                                Ver
+                            </a>
+
+                            {% if perms.biblioteca.change_autor %}
+                                <a
+                                    href="{% url 'biblioteca:autor_editar' autor.id %}"
+                                    class="btn btn-sm"
+                                >
+                                    Editar
+                                </a>
+                            {% endif %}
+
+                            {% if perms.biblioteca.delete_autor %}
+                                <a
+                                    href="{% url 'biblioteca:autor_excluir' autor.id %}"
+                                    class="btn btn-sm btn-danger"
+                                >
+                                    Excluir
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td
+                            colspan="3"
+                            class="text-center text-secondary"
+                        >
+                            Nenhum autor cadastrado.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
