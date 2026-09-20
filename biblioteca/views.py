@@ -23,6 +23,22 @@ def entrar(request):
         data=request.POST or None,
     )
 
+    form.fields["username"].widget.attrs.update(
+        {
+            "class": "form-control",
+            "placeholder": "Digite seu usuário",
+            "autocomplete": "username",
+        }
+    )
+
+    form.fields["password"].widget.attrs.update(
+        {
+            "class": "form-control",
+            "placeholder": "Digite sua senha",
+            "autocomplete": "current-password",
+        }
+    )
+
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
         return redirect("biblioteca:livro_listar")
@@ -32,7 +48,6 @@ def entrar(request):
         "biblioteca/autenticacao/entrar.html",
         {"form": form},
     )
-
 
 @login_required
 def sair(request):

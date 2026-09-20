@@ -1,0 +1,98 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    Livros | Biblioteca Digital
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <div class="row align-items-center">
+
+            <div class="col">
+                <h2 class="page-title">
+                    Livros
+                </h2>
+            </div>
+
+            {% if perms.biblioteca.add_livro %}
+                <div class="col-auto ms-auto">
+                    <a
+                        class="btn btn-primary"
+                        href="{% url 'biblioteca:livro_criar' %}"
+                    >
+                        Cadastrar livro
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="table-responsive">
+
+            <table class="table table-vcenter card-table">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Ano</th>
+                        <th>Autores</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for livro in livros %}
+                        <tr>
+                            <td>{{ livro.titulo }}</td>
+                            <td>{{ livro.ano_publicacao }}</td>
+
+                            <td>
+                                {{ livro.autores.all|join:", " }}
+                            </td>
+
+                            <td>
+                                <a
+                                    class="btn btn-sm"
+                                    href="{% url 'biblioteca:livro_detalhar' livro.id %}"
+                                >
+                                    Ver
+                                </a>
+
+                                {% if perms.biblioteca.change_livro %}
+                                    <a
+                                        class="btn btn-sm"
+                                        href="{% url 'biblioteca:livro_editar' livro.id %}"
+                                    >
+                                        Editar
+                                    </a>
+                                {% endif %}
+
+                                {% if perms.biblioteca.delete_livro %}
+                                    <a
+                                        class="btn btn-sm btn-danger"
+                                        href="{% url 'biblioteca:livro_excluir' livro.id %}"
+                                    >
+                                        Excluir
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td
+                                colspan="4"
+                                class="text-center text-secondary"
+                            >
+                                Nenhum livro cadastrado.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

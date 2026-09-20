@@ -1,0 +1,75 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Entrar | Biblioteca Digital</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'tabler/css/tabler.min.css' %}"
+    >
+</head>
+
+<body class="d-flex flex-column">
+    <div class="page page-center">
+        <div class="container container-tight py-4">
+
+            <div class="text-center mb-4">
+                <h1>Biblioteca Digital</h1>
+            </div>
+
+            <form method="post" class="card card-md">
+                {% csrf_token %}
+
+                <div class="card-body">
+                    <h2 class="h2 text-center mb-4">
+                        Entrar no sistema
+                    </h2>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            Usuário ou senha inválidos.
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nome de usuário
+                        </label>
+
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Senha
+                        </label>
+
+                        {{ form.password }}
+                    </div>
+
+                    <div class="form-footer">
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            Entrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+</body>
+</html>

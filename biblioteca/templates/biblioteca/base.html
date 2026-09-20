@@ -1,0 +1,147 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        {% block title %}Biblioteca Digital{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'tabler/css/tabler.min.css' %}"
+    >
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="navbar navbar-expand-md">
+            <div class="container-xl">
+
+                <a
+                    class="navbar-brand"
+                    href="{% url 'biblioteca:livro_listar' %}"
+                >
+                    Biblioteca Digital
+                </a>
+
+                <div class="navbar-nav flex-row order-md-last">
+                    <span class="nav-link">
+                        {{ request.user.username }}
+                    </span>
+
+                    <form
+                        method="post"
+                        action="{% url 'biblioteca:sair' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-secondary"
+                        >
+                            Sair
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </header>
+
+        <header class="navbar-expand-md">
+            <div class="navbar">
+                <div class="container-xl">
+                    <ul class="navbar-nav">
+
+                        {% if perms.biblioteca.view_livro %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:livro_listar' %}"
+                                >
+                                    Livros
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.biblioteca.view_autor %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:autor_listar' %}"
+                                >
+                                    Autores
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.biblioteca.view_categoria %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:categoria_listar' %}"
+                                >
+                                    Categorias
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.biblioteca.view_usuario %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:usuario_listar' %}"
+                                >
+                                    Usuários
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.biblioteca.view_usuariolivro %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:usuario_livro_listar' %}"
+                                >
+                                    Livros dos usuários
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if request.user.is_staff %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'admin:index' %}"
+                                >
+                                    Administração
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-wrapper">
+            <div class="page-body">
+                <div class="container-xl">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+</body>
+</html>

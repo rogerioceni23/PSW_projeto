@@ -5,6 +5,19 @@ from . import views
 app_name = "biblioteca"
 
 urlpatterns = [
+    # Autenticação
+    path(
+        "entrar/",
+        views.entrar,
+        name="entrar",
+    ),
+    path(
+        "sair/",
+        views.sair,
+        name="sair",
+    ),
+
+    # Categorias
     path(
         "categorias/",
         views.categoria_listar,
@@ -30,6 +43,8 @@ urlpatterns = [
         views.categoria_excluir,
         name="categoria_excluir",
     ),
+
+    # Autores
     path(
         "autores/",
         views.autor_listar,
@@ -55,6 +70,62 @@ urlpatterns = [
         views.autor_excluir,
         name="autor_excluir",
     ),
+
+    # Livros
+    path(
+        "livros/",
+        views.livro_listar,
+        name="livro_listar",
+    ),
+    path(
+        "livros/cadastrar/",
+        views.livro_criar,
+        name="livro_criar",
+    ),
+    path(
+        "livros/<int:id>/",
+        views.livro_detalhar,
+        name="livro_detalhar",
+    ),
+    path(
+        "livros/<int:id>/editar/",
+        views.livro_editar,
+        name="livro_editar",
+    ),
+    path(
+        "livros/<int:id>/excluir/",
+        views.livro_excluir,
+        name="livro_excluir",
+    ),
+
+    # Usuários
+    path(
+        "usuarios/",
+        views.usuario_listar,
+        name="usuario_listar",
+    ),
+    path(
+        "usuarios/cadastrar/",
+        views.usuario_criar,
+        name="usuario_criar",
+    ),
+    path(
+        "usuarios/<int:id>/",
+        views.usuario_detalhar,
+        name="usuario_detalhar",
+    ),
+    path(
+        "usuarios/<int:id>/editar/",
+        views.usuario_editar,
+        name="usuario_editar",
+    ),
+    path(
+        "usuarios/<int:id>/excluir/",
+        views.usuario_excluir,
+        name="usuario_excluir",
+    ),
+
+    # Vínculos entre usuários e livros
     path(
         "usuarios-livros/",
         views.usuario_livro_listar,
@@ -79,16 +150,5 @@ urlpatterns = [
         "usuarios-livros/<int:id>/excluir/",
         views.usuario_livro_excluir,
         name="usuario_livro_excluir",
-    ),
-
-    path(
-        "entrar/",
-        views.entrar,
-        name="entrar",
-    ),
-    path(
-        "sair/",
-        views.sair,
-        name="sair",
     ),
 ]
