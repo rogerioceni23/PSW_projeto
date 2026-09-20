@@ -1,0 +1,44 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    Excluir livro | Biblioteca Digital
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+
+        <div class="card">
+            <div class="card-body">
+                <h2>Excluir livro</h2>
+
+                <p>
+                    Confirma a exclusão de
+                    <strong>{{ livro.titulo }}</strong>?
+                </p>
+            </div>
+
+            <div class="card-footer text-end">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <a
+                        href="{% url 'biblioteca:livro_listar' %}"
+                        class="btn"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+                        Excluir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

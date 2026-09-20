@@ -1,0 +1,87 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    {{ livro.titulo }} | Biblioteca Digital
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                {{ livro.titulo }}
+            </h2>
+        </div>
+
+        {% if perms.biblioteca.change_livro %}
+            <div class="col-auto ms-auto">
+                <a
+                    href="{% url 'biblioteca:livro_editar' livro.id %}"
+                    class="btn btn-primary"
+                >
+                    Editar
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="row g-0">
+
+        {% if livro.capa %}
+            <div class="col-md-4">
+                <img
+                    src="{{ livro.capa.url }}"
+                    alt="Capa de {{ livro.titulo }}"
+                    class="img-fluid rounded-start"
+                >
+            </div>
+        {% endif %}
+
+        <div class="col">
+            <div class="card-body">
+                <p>
+                    <strong>Ano:</strong>
+                    {{ livro.ano_publicacao }}
+                </p>
+
+                <p>
+                    <strong>Autores:</strong>
+                    {{ livro.autores.all|join:", " }}
+                </p>
+
+                <p>
+                    <strong>Categorias:</strong>
+                    {{ livro.categorias.all|join:", " }}
+                </p>
+
+                <p>
+                    <strong>Descrição:</strong><br>
+                    {{ livro.descricao|linebreaksbr }}
+                </p>
+
+                {% if livro.arquivo_pdf %}
+                    <a
+                        href="{{ livro.arquivo_pdf.url }}"
+                        class="btn btn-outline-primary"
+                        target="_blank"
+                    >
+                        Abrir PDF
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="card-footer">
+                <a
+                    href="{% url 'biblioteca:livro_listar' %}"
+                    class="btn"
+                >
+                    Voltar
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
