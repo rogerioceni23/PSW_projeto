@@ -1,8 +1,14 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class Usuario(AbstractUser):
+class Usuario(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="perfil_usuario",
+    )
+
     nome = models.CharField(max_length=100)
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14)
@@ -17,7 +23,8 @@ class Usuario(AbstractUser):
     )
 
     def __str__(self):
-        return self.nome or self.username
+        return self.nome
+
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)

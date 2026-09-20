@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 
 from .models import (
     Usuario,
@@ -11,53 +10,20 @@ from .models import (
 
 
 @admin.register(Usuario)
-class UsuarioAdmin(UserAdmin):
+class UsuarioAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "username",
-        "nome",
-        "cpf",
-        "is_staff",
-        "is_active",
-    )
-
-    search_fields = (
-        "username",
+        "user",
         "nome",
         "cpf",
         "rg",
     )
 
-    fieldsets = UserAdmin.fieldsets + (
-        (
-            "Dados pessoais",
-            {
-                "fields": (
-                    "nome",
-                    "rg",
-                    "cpf",
-                    "endereco",
-                    "foto",
-                    "descricao",
-                )
-            },
-        ),
-    )
-
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        (
-            "Dados pessoais",
-            {
-                "fields": (
-                    "nome",
-                    "rg",
-                    "cpf",
-                    "endereco",
-                    "foto",
-                    "descricao",
-                )
-            },
-        ),
+    search_fields = (
+        "user__username",
+        "nome",
+        "cpf",
+        "rg",
     )
 
 
@@ -114,7 +80,7 @@ class UsuarioLivroAdmin(admin.ModelAdmin):
 
     search_fields = (
         "usuario__nome",
-        "usuario__username",
+        "usuario__user__username",
         "livro__titulo",
     )
 

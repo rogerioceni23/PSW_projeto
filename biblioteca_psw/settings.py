@@ -127,6 +127,6 @@ MAILERS = {
     },
 }
 
-AUTH_USER_MODEL = 'biblioteca.Usuario'
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
