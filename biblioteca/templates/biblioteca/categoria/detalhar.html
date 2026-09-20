@@ -1,0 +1,57 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    {{ categoria.nome }} | Biblioteca Digital
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                {{ categoria.nome }}
+            </h2>
+        </div>
+
+        {% if perms.biblioteca.change_categoria %}
+            <div class="col-auto ms-auto">
+                <a
+                    href="{% url 'biblioteca:categoria_editar' categoria.id %}"
+                    class="btn btn-primary"
+                >
+                    Editar
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h3 class="card-title">
+            Livros desta categoria
+        </h3>
+
+        <ul>
+            {% for livro in categoria.livros.all %}
+                <li>
+                    <a href="{% url 'biblioteca:livro_detalhar' livro.id %}">
+                        {{ livro.titulo }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>Nenhum livro nesta categoria.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card-footer">
+        <a
+            href="{% url 'biblioteca:categoria_listar' %}"
+            class="btn"
+        >
+            Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}
