@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Categoria
-from .forms import CategoriaForm
+from .forms import AutorForm, CategoriaForm
+from .models import Autor, Categoria
 
 def categoria_listar(request):
     categorias = Categoria.objects.all()
@@ -92,4 +92,75 @@ def categoria_excluir(request, id):
         request,
         "biblioteca/categoria/confirmar_exclusao.html",
         contexto,
+    )
+def autor_listar(request):
+    autores = Autor.objects.all()
+
+    return render(
+        request,
+        "biblioteca/autor/listar.html",
+        {"autores": autores},
+    )
+
+
+def autor_criar(request):
+    if request.method == "POST":
+        form = AutorForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:autor_listar")
+    else:
+        form = AutorForm()
+
+    return render(
+        request,
+        "biblioteca/autor/formulario.html",
+        {"form": form},
+    )
+
+
+def autor_detalhar(request, id):
+    autor = get_object_or_404(Autor, id=id)
+
+    return render(
+        request,
+        "biblioteca/autor/detalhar.html",
+        {"autor": autor},
+    )
+
+
+def autor_editar(request, id):
+    autor = get_object_or_404(Autor, id=id)
+
+    if request.method == "POST":
+        form = AutorForm(request.POST, instance=autor)
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:autor_listar")
+    else:
+        form = AutorForm(instance=autor)
+
+    return render(
+        request,
+        "biblioteca/autor/formulario.html",
+        {
+            "form": form,
+            "autor": autor,
+        },
+    )
+
+
+def autor_excluir(request, id):
+    autor = get_object_or_404(Autor, id=id)
+
+    if request.method == "POST":
+        autor.delete()
+        return redirect("biblioteca:autor_listar")
+
+    return render(
+        request,
+        "biblioteca/autor/confirmar_exclusao.html",
+        {"autor": autor},
     )
