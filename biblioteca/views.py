@@ -1,7 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect, render
-
-from .forms import AutorForm, CategoriaForm, LivroForm
 from .models import Autor, Categoria, Livro
+from .forms import (
+    AutorForm,
+    CategoriaForm,
+    LivroForm,
+    UsuarioCriacaoForm,
+    UsuarioEdicaoForm,
+)
+from .models import Autor, Categoria, Livro, Usuario
 
 def categoria_listar(request):
     categorias = Categoria.objects.all()
@@ -251,4 +257,86 @@ def livro_excluir(request, id):
         request,
         "biblioteca/livro/confirmar_exclusao.html",
         {"livro": livro},
+    )
+
+def usuario_listar(request):
+    usuarios = Usuario.objects.prefetch_related("groups").all()
+
+    return render(
+        request,
+        "biblioteca/usuario/listar.html",
+        {"usuarios": usuarios},
+    )
+
+
+def usuario_criar(request):
+    if request.method == "POST":
+        form = UsuarioCriacaoForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:usuario_listar")
+    else:
+        form = UsuarioCriacaoForm()
+
+    return render(
+        request,
+        "biblioteca/usuario/formulario.html",
+        {"form": form},
+    )
+
+
+def usuario_detalhar(request, id):
+    usuario = get_object_or_404(
+        Usuario.objects.prefetch_related("groups"),
+        id=id,
+    )
+
+    return render(
+        request,
+        "biblioteca/usuario/detalhar.html",
+        {"usuario": usuario},
+    )
+
+
+def usuario_editar(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
+
+    if request.method == "POST":
+        form = UsuarioEdicaoForm(
+            request.POST,
+            request.FILES,
+            instance=usuario,
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:usuario_listar")
+    else:
+        form = UsuarioEdicaoForm(instance=usuario)
+
+    return render(
+        request,
+        "biblioteca/usuario/formulario.html",
+        {
+            "form": form,
+            "usuario": usuario,
+        },
+    )
+
+
+def usuario_excluir(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
+
+    if request.method == "POST":
+        usuario.delete()
+        return redirect("biblioteca:usuario_listar")
+
+    return render(
+        request,
+        "biblioteca/usuario/confirmar_exclusao.html",
+        {"usuario": usuario},
     )

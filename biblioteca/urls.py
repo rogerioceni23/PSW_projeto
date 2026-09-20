@@ -80,4 +80,29 @@ urlpatterns = [
         views.livro_excluir,
         name="livro_excluir",
     ),
+    path(
+        "usuarios/",
+        views.usuario_listar,
+        name="usuario_listar",
+    ),
+    path(
+        "usuarios/cadastrar/",
+        views.usuario_criar,
+        name="usuario_criar",
+    ),
+    path(
+        "usuarios/<int:id>/",
+        views.usuario_detalhar,
+        name="usuario_detalhar",
+    ),
+    path(
+        "usuarios/<int:id>/editar/",
+        views.usuario_editar,
+        name="usuario_editar",
+    ),
+    path(
+        "usuarios/<int:id>/excluir/",
+        views.usuario_excluir,
+        name="usuario_excluir",
+    ),
 ]
