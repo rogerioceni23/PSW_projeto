@@ -80,4 +80,15 @@ urlpatterns = [
         views.usuario_livro_excluir,
         name="usuario_livro_excluir",
     ),
+
+    path(
+        "entrar/",
+        views.entrar,
+        name="entrar",
+    ),
+    path(
+        "sair/",
+        views.sair,
+        name="sair",
+    ),
 ]

@@ -1,4 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 
 from .forms import (
     AutorForm,
@@ -254,3 +257,31 @@ def usuario_livro_excluir(request, id):
         "biblioteca/usuario_livro/confirmar_exclusao.html",
         {"vinculo": vinculo},
     )
+
+def entrar(request):
+    if request.user.is_authenticated:
+        return redirect("biblioteca:categoria_listar")
+
+    form = AuthenticationForm(
+        request,
+        data=request.POST or None,
+    )
+
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("biblioteca:categoria_listar")
+
+    return render(
+        request,
+        "biblioteca/autenticacao/entrar.html",
+        {"form": form},
+    )
+
+
+@login_required
+def sair(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect("biblioteca:entrar")
+
+    return redirect("biblioteca:categoria_listar")
