@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import AutorForm, CategoriaForm
-from .models import Autor, Categoria
+from .forms import AutorForm, CategoriaForm, LivroForm
+from .models import Autor, Categoria, Livro
 
 def categoria_listar(request):
     categorias = Categoria.objects.all()
@@ -163,4 +163,92 @@ def autor_excluir(request, id):
         request,
         "biblioteca/autor/confirmar_exclusao.html",
         {"autor": autor},
+    )
+
+def livro_listar(request):
+    livros = Livro.objects.prefetch_related(
+        "autores",
+        "categorias",
+    ).all()
+
+    return render(
+        request,
+        "biblioteca/livro/listar.html",
+        {"livros": livros},
+    )
+
+
+def livro_criar(request):
+    if request.method == "POST":
+        form = LivroForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:livro_listar")
+    else:
+        form = LivroForm()
+
+    return render(
+        request,
+        "biblioteca/livro/formulario.html",
+        {"form": form},
+    )
+
+
+def livro_detalhar(request, id):
+    livro = get_object_or_404(
+        Livro.objects.prefetch_related(
+            "autores",
+            "categorias",
+        ),
+        id=id,
+    )
+
+    return render(
+        request,
+        "biblioteca/livro/detalhar.html",
+        {"livro": livro},
+    )
+
+
+def livro_editar(request, id):
+    livro = get_object_or_404(Livro, id=id)
+
+    if request.method == "POST":
+        form = LivroForm(
+            request.POST,
+            request.FILES,
+            instance=livro,
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("biblioteca:livro_listar")
+    else:
+        form = LivroForm(instance=livro)
+
+    return render(
+        request,
+        "biblioteca/livro/formulario.html",
+        {
+            "form": form,
+            "livro": livro,
+        },
+    )
+
+
+def livro_excluir(request, id):
+    livro = get_object_or_404(Livro, id=id)
+
+    if request.method == "POST":
+        livro.delete()
+        return redirect("biblioteca:livro_listar")
+
+    return render(
+        request,
+        "biblioteca/livro/confirmar_exclusao.html",
+        {"livro": livro},
     )
