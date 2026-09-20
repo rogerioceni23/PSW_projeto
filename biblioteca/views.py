@@ -1,13 +1,14 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Autor, Categoria, Livro
+
 from .forms import (
     AutorForm,
     CategoriaForm,
     LivroForm,
     UsuarioCriacaoForm,
     UsuarioEdicaoForm,
+    UsuarioLivroForm,
 )
-from .models import Autor, Categoria, Livro, Usuario
+from .models import Autor, Categoria, Livro, Usuario, UsuarioLivro
 
 def categoria_listar(request):
     categorias = Categoria.objects.all()
@@ -170,173 +171,86 @@ def autor_excluir(request, id):
         "biblioteca/autor/confirmar_exclusao.html",
         {"autor": autor},
     )
-
-def livro_listar(request):
-    livros = Livro.objects.prefetch_related(
-        "autores",
-        "categorias",
+def usuario_livro_listar(request):
+    vinculos = UsuarioLivro.objects.select_related(
+        "usuario",
+        "livro",
     ).all()
 
     return render(
         request,
-        "biblioteca/livro/listar.html",
-        {"livros": livros},
+        "biblioteca/usuario_livro/listar.html",
+        {"vinculos": vinculos},
     )
 
 
-def livro_criar(request):
+def usuario_livro_criar(request):
     if request.method == "POST":
-        form = LivroForm(
-            request.POST,
-            request.FILES,
-        )
+        form = UsuarioLivroForm(request.POST)
 
         if form.is_valid():
             form.save()
-            return redirect("biblioteca:livro_listar")
+            return redirect("biblioteca:usuario_livro_listar")
     else:
-        form = LivroForm()
+        form = UsuarioLivroForm()
 
     return render(
         request,
-        "biblioteca/livro/formulario.html",
+        "biblioteca/usuario_livro/formulario.html",
         {"form": form},
     )
 
 
-def livro_detalhar(request, id):
-    livro = get_object_or_404(
-        Livro.objects.prefetch_related(
-            "autores",
-            "categorias",
+def usuario_livro_detalhar(request, id):
+    vinculo = get_object_or_404(
+        UsuarioLivro.objects.select_related(
+            "usuario",
+            "livro",
         ),
         id=id,
     )
 
     return render(
         request,
-        "biblioteca/livro/detalhar.html",
-        {"livro": livro},
+        "biblioteca/usuario_livro/detalhar.html",
+        {"vinculo": vinculo},
     )
 
 
-def livro_editar(request, id):
-    livro = get_object_or_404(Livro, id=id)
+def usuario_livro_editar(request, id):
+    vinculo = get_object_or_404(UsuarioLivro, id=id)
 
     if request.method == "POST":
-        form = LivroForm(
+        form = UsuarioLivroForm(
             request.POST,
-            request.FILES,
-            instance=livro,
+            instance=vinculo,
         )
 
         if form.is_valid():
             form.save()
-            return redirect("biblioteca:livro_listar")
+            return redirect("biblioteca:usuario_livro_listar")
     else:
-        form = LivroForm(instance=livro)
+        form = UsuarioLivroForm(instance=vinculo)
 
     return render(
         request,
-        "biblioteca/livro/formulario.html",
+        "biblioteca/usuario_livro/formulario.html",
         {
             "form": form,
-            "livro": livro,
+            "vinculo": vinculo,
         },
     )
 
 
-def livro_excluir(request, id):
-    livro = get_object_or_404(Livro, id=id)
+def usuario_livro_excluir(request, id):
+    vinculo = get_object_or_404(UsuarioLivro, id=id)
 
     if request.method == "POST":
-        livro.delete()
-        return redirect("biblioteca:livro_listar")
+        vinculo.delete()
+        return redirect("biblioteca:usuario_livro_listar")
 
     return render(
         request,
-        "biblioteca/livro/confirmar_exclusao.html",
-        {"livro": livro},
-    )
-
-def usuario_listar(request):
-    usuarios = Usuario.objects.prefetch_related("groups").all()
-
-    return render(
-        request,
-        "biblioteca/usuario/listar.html",
-        {"usuarios": usuarios},
-    )
-
-
-def usuario_criar(request):
-    if request.method == "POST":
-        form = UsuarioCriacaoForm(
-            request.POST,
-            request.FILES,
-        )
-
-        if form.is_valid():
-            form.save()
-            return redirect("biblioteca:usuario_listar")
-    else:
-        form = UsuarioCriacaoForm()
-
-    return render(
-        request,
-        "biblioteca/usuario/formulario.html",
-        {"form": form},
-    )
-
-
-def usuario_detalhar(request, id):
-    usuario = get_object_or_404(
-        Usuario.objects.prefetch_related("groups"),
-        id=id,
-    )
-
-    return render(
-        request,
-        "biblioteca/usuario/detalhar.html",
-        {"usuario": usuario},
-    )
-
-
-def usuario_editar(request, id):
-    usuario = get_object_or_404(Usuario, id=id)
-
-    if request.method == "POST":
-        form = UsuarioEdicaoForm(
-            request.POST,
-            request.FILES,
-            instance=usuario,
-        )
-
-        if form.is_valid():
-            form.save()
-            return redirect("biblioteca:usuario_listar")
-    else:
-        form = UsuarioEdicaoForm(instance=usuario)
-
-    return render(
-        request,
-        "biblioteca/usuario/formulario.html",
-        {
-            "form": form,
-            "usuario": usuario,
-        },
-    )
-
-
-def usuario_excluir(request, id):
-    usuario = get_object_or_404(Usuario, id=id)
-
-    if request.method == "POST":
-        usuario.delete()
-        return redirect("biblioteca:usuario_listar")
-
-    return render(
-        request,
-        "biblioteca/usuario/confirmar_exclusao.html",
-        {"usuario": usuario},
+        "biblioteca/usuario_livro/confirmar_exclusao.html",
+        {"vinculo": vinculo},
     )
