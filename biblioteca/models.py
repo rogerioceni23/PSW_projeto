@@ -1,8 +1,8 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class Usuario(AbstractUser):
+class Usuario(User):
     nome = models.CharField(max_length=100)
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14)
