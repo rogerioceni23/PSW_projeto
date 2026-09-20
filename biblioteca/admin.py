@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
+admin.site.site_header = "Administração da Biblioteca Digital"
+admin.site.site_title = "Biblioteca Digital"
+admin.site.index_title = "Gerenciamento da biblioteca"
+
 from .models import (
     Usuario,
     Autor,
