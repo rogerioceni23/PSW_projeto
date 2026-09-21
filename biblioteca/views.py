@@ -14,6 +14,25 @@ from .forms import (
 from .models import Autor, Categoria, Livro, Usuario, UsuarioLivro
 
 
+@login_required
+def painel(request):
+    if not request.user.is_staff:
+        raise PermissionDenied
+
+    contexto = {
+        "quantidade_livros": Livro.objects.count(),
+        "quantidade_autores": Autor.objects.count(),
+        "quantidade_categorias": Categoria.objects.count(),
+        "quantidade_usuarios": Usuario.objects.count(),
+        "quantidade_vinculos": UsuarioLivro.objects.count(),
+    }
+
+    return render(
+        request,
+        "biblioteca/painel.html",
+        contexto,
+    )
+
 def entrar(request):
     if request.user.is_authenticated:
         return redirect("biblioteca:livro_listar")

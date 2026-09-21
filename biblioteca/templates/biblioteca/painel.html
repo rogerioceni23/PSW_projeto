@@ -1,0 +1,76 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Painel administrativo{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+    <div class="page-header">
+        <div class="col">
+            <div class="page-pretitle">Administração</div>
+            <h2 class="page-title">Painel administrativo</h2>
+        </div>
+    </div>
+
+    <div class="row row-cards mt-3">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-secondary">Livros</div>
+                    <div class="h1">{{ quantidade_livros }}</div>
+                    <a href="{% url 'biblioteca:livro_listar' %}">
+                        Gerenciar livros
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-secondary">Autores</div>
+                    <div class="h1">{{ quantidade_autores }}</div>
+                    <a href="{% url 'biblioteca:autor_listar' %}">
+                        Gerenciar autores
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-secondary">Categorias</div>
+                    <div class="h1">{{ quantidade_categorias }}</div>
+                    <a href="{% url 'biblioteca:categoria_listar' %}">
+                        Gerenciar categorias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-secondary">Usuários</div>
+                    <div class="h1">{{ quantidade_usuarios }}</div>
+                    <a href="{% url 'biblioteca:usuario_listar' %}">
+                        Gerenciar usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-secondary">Livros dos usuários</div>
+                    <div class="h1">{{ quantidade_vinculos }}</div>
+                    <a href="{% url 'biblioteca:usuario_livro_listar' %}">
+                        Gerenciar vínculos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}	

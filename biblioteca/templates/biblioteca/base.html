@@ -26,12 +26,21 @@
         <header class="navbar navbar-expand-md">
             <div class="container-xl">
 
-                <a
-                    class="navbar-brand"
-                    href="{% url 'biblioteca:livro_listar' %}"
-                >
-                    Biblioteca Digital
-                </a>
+                {% if request.user.is_staff %}
+                    <a
+                        class="navbar-brand"
+                        href="{% url 'biblioteca:painel' %}"
+                    >
+                        Biblioteca Digital
+                    </a>
+                {% else %}
+                    <a
+                        class="navbar-brand"
+                        href="{% url 'biblioteca:livro_listar' %}"
+                    >
+                        Biblioteca Digital
+                    </a>
+                {% endif %}
 
                 <div class="navbar-nav flex-row order-md-last">
                     <span class="nav-link">
@@ -61,13 +70,28 @@
                 <div class="container-xl">
                     <ul class="navbar-nav">
 
+                        {% if request.user.is_staff %}
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:painel' %}"
+                                >
+                                    <span class="nav-link-title">
+                                        Painel
+                                    </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
                         {% if perms.biblioteca.view_livro %}
                             <li class="nav-item">
                                 <a
                                     class="nav-link"
                                     href="{% url 'biblioteca:livro_listar' %}"
                                 >
-                                    Livros
+                                    <span class="nav-link-title">
+                                        Livros
+                                    </span>
                                 </a>
                             </li>
                         {% endif %}
@@ -78,7 +102,9 @@
                                     class="nav-link"
                                     href="{% url 'biblioteca:autor_listar' %}"
                                 >
-                                    Autores
+                                    <span class="nav-link-title">
+                                        Autores
+                                    </span>
                                 </a>
                             </li>
                         {% endif %}
@@ -89,7 +115,9 @@
                                     class="nav-link"
                                     href="{% url 'biblioteca:categoria_listar' %}"
                                 >
-                                    Categorias
+                                    <span class="nav-link-title">
+                                        Categorias
+                                    </span>
                                 </a>
                             </li>
                         {% endif %}
@@ -100,7 +128,9 @@
                                     class="nav-link"
                                     href="{% url 'biblioteca:usuario_listar' %}"
                                 >
-                                    Usuários
+                                    <span class="nav-link-title">
+                                        Usuários
+                                    </span>
                                 </a>
                             </li>
                         {% endif %}
@@ -111,18 +141,9 @@
                                     class="nav-link"
                                     href="{% url 'biblioteca:usuario_livro_listar' %}"
                                 >
-                                    Livros dos usuários
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        {% if request.user.is_staff %}
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link"
-                                    href="{% url 'admin:index' %}"
-                                >
-                                    Administração
+                                    <span class="nav-link-title">
+                                        Livros dos usuários
+                                    </span>
                                 </a>
                             </li>
                         {% endif %}

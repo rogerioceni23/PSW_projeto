@@ -4,14 +4,23 @@ from . import views
 
 app_name = "biblioteca"
 
+from django.urls import path
+
+from . import views
+
+app_name = "biblioteca"
+
 urlpatterns = [
-    # Autenticação
+    path(
+        "painel/",
+        views.painel,
+        name="painel",
+    ),
     path(
         "entrar/",
         views.entrar,
         name="entrar",
-    ),
-    path(
+    ),    path(
         "sair/",
         views.sair,
         name="sair",
