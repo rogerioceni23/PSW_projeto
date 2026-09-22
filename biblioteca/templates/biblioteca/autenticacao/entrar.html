@@ -26,6 +26,26 @@
                 <h1>Biblioteca Digital</h1>
             </div>
 
+            {% if messages %}
+                {% for message in messages %}
+                    <div
+                        class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible"
+                        role="alert"
+                    >
+                        <div>
+                            {{ message }}
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Fechar"
+                        ></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <form method="post" class="card card-md">
                 {% csrf_token %}
 
@@ -41,19 +61,37 @@
                     {% endif %}
 
                     <div class="mb-3">
-                        <label class="form-label">
+                        <label
+                            class="form-label"
+                            for="{{ form.username.id_for_label }}"
+                        >
                             Nome de usuário
                         </label>
 
                         {{ form.username }}
+
+                        {% for erro in form.username.errors %}
+                            <div class="text-danger mt-1">
+                                {{ erro }}
+                            </div>
+                        {% endfor %}
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">
+                        <label
+                            class="form-label"
+                            for="{{ form.password.id_for_label }}"
+                        >
                             Senha
                         </label>
 
                         {{ form.password }}
+
+                        {% for erro in form.password.errors %}
+                            <div class="text-danger mt-1">
+                                {{ erro }}
+                            </div>
+                        {% endfor %}
                     </div>
 
                     <div class="form-footer">

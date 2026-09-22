@@ -1,0 +1,30 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Acesso negado{% endblock %}
+
+{% block content %}
+<div class="container-tight py-5">
+    <div class="empty">
+        <div class="empty-header">403</div>
+
+        <p class="empty-title">
+            Acesso negado
+        </p>
+
+        <p class="empty-subtitle text-secondary">
+            Sua conta não possui permissão para acessar esta página.
+        </p>
+
+        {% if perms.biblioteca.view_livro %}
+            <div class="empty-action">
+                <a
+                    href="{% url 'biblioteca:livro_listar' %}"
+                    class="btn btn-primary"
+                >
+                    Voltar para os livros
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

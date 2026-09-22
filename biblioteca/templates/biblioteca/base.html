@@ -156,6 +156,29 @@
         <main class="page-wrapper">
             <div class="page-body">
                 <div class="container-xl">
+
+                    {% if messages %}
+                        <div class="mt-3">
+                            {% for message in messages %}
+                                <div
+                                    class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible"
+                                    role="alert"
+                                >
+                                    <div>
+                                        {{ message }}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert"
+                                        aria-label="Fechar"
+                                    ></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     {% block content %}{% endblock %}
                 </div>
             </div>

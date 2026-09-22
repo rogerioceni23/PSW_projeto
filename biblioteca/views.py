@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -33,6 +34,7 @@ def painel(request):
         contexto,
     )
 
+
 def entrar(request):
     if request.user.is_authenticated:
         return redirect("biblioteca:livro_listar")
@@ -60,6 +62,12 @@ def entrar(request):
 
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
+
+        messages.success(
+            request,
+            "Login realizado com sucesso.",
+        )
+
         return redirect("biblioteca:livro_listar")
 
     return render(
@@ -68,10 +76,17 @@ def entrar(request):
         {"form": form},
     )
 
+
 @login_required
 def sair(request):
     if request.method == "POST":
         logout(request)
+
+        messages.success(
+            request,
+            "Você saiu do sistema.",
+        )
+
         return redirect("biblioteca:entrar")
 
     return redirect("biblioteca:livro_listar")
@@ -100,6 +115,12 @@ def categoria_criar(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Categoria cadastrada com sucesso.",
+            )
+
             return redirect("biblioteca:categoria_listar")
     else:
         form = CategoriaForm()
@@ -136,6 +157,12 @@ def categoria_editar(request, id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Categoria atualizada com sucesso.",
+            )
+
             return redirect("biblioteca:categoria_listar")
     else:
         form = CategoriaForm(instance=categoria)
@@ -157,6 +184,12 @@ def categoria_excluir(request, id):
 
     if request.method == "POST":
         categoria.delete()
+
+        messages.success(
+            request,
+            "Categoria excluída com sucesso.",
+        )
+
         return redirect("biblioteca:categoria_listar")
 
     return render(
@@ -189,6 +222,12 @@ def autor_criar(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Autor cadastrado com sucesso.",
+            )
+
             return redirect("biblioteca:autor_listar")
     else:
         form = AutorForm()
@@ -225,6 +264,12 @@ def autor_editar(request, id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Autor atualizado com sucesso.",
+            )
+
             return redirect("biblioteca:autor_listar")
     else:
         form = AutorForm(instance=autor)
@@ -246,6 +291,12 @@ def autor_excluir(request, id):
 
     if request.method == "POST":
         autor.delete()
+
+        messages.success(
+            request,
+            "Autor excluído com sucesso.",
+        )
+
         return redirect("biblioteca:autor_listar")
 
     return render(
@@ -284,6 +335,12 @@ def livro_criar(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Livro cadastrado com sucesso.",
+            )
+
             return redirect("biblioteca:livro_listar")
     else:
         form = LivroForm()
@@ -327,6 +384,12 @@ def livro_editar(request, id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Livro atualizado com sucesso.",
+            )
+
             return redirect("biblioteca:livro_listar")
     else:
         form = LivroForm(instance=livro)
@@ -348,6 +411,12 @@ def livro_excluir(request, id):
 
     if request.method == "POST":
         livro.delete()
+
+        messages.success(
+            request,
+            "Livro excluído com sucesso.",
+        )
+
         return redirect("biblioteca:livro_listar")
 
     return render(
@@ -383,6 +452,12 @@ def usuario_criar(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Usuário cadastrado com sucesso.",
+            )
+
             return redirect("biblioteca:usuario_listar")
     else:
         form = UsuarioCriacaoForm()
@@ -423,6 +498,12 @@ def usuario_editar(request, id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Usuário atualizado com sucesso.",
+            )
+
             return redirect("biblioteca:usuario_listar")
     else:
         form = UsuarioEdicaoForm(instance=usuario)
@@ -444,6 +525,12 @@ def usuario_excluir(request, id):
 
     if request.method == "POST":
         usuario.delete()
+
+        messages.success(
+            request,
+            "Usuário excluído com sucesso.",
+        )
+
         return redirect("biblioteca:usuario_listar")
 
     return render(
@@ -479,6 +566,12 @@ def usuario_livro_criar(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Vínculo cadastrado com sucesso.",
+            )
+
             return redirect("biblioteca:usuario_livro_listar")
     else:
         form = UsuarioLivroForm()
@@ -524,6 +617,12 @@ def usuario_livro_editar(request, id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                "Vínculo atualizado com sucesso.",
+            )
+
             return redirect("biblioteca:usuario_livro_listar")
     else:
         form = UsuarioLivroForm(instance=vinculo)
@@ -548,10 +647,23 @@ def usuario_livro_excluir(request, id):
 
     if request.method == "POST":
         vinculo.delete()
+
+        messages.success(
+            request,
+            "Vínculo excluído com sucesso.",
+        )
+
         return redirect("biblioteca:usuario_livro_listar")
 
     return render(
         request,
         "biblioteca/usuario_livro/confirmar_exclusao.html",
         {"vinculo": vinculo},
+    )
+
+def erro_permissao(request, exception=None):
+    return render(
+        request,
+        "biblioteca/erros/403.html",
+        status=403,
     )
