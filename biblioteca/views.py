@@ -742,3 +742,20 @@ def erro_permissao(request, exception=None):
         "biblioteca/erros/403.html",
         status=403,
     )
+
+@login_required
+def meus_livros(request):
+    vinculos = UsuarioLivro.objects.filter(
+        usuario=request.user,
+    ).select_related(
+        "livro",
+    ).prefetch_related(
+        "livro__autores",
+        "livro__categorias",
+    ).order_by("-data_hora")
+
+    return render(
+        request,
+        "biblioteca/leitor/meus_livros.html",
+        {"vinculos": vinculos},
+    )

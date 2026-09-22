@@ -94,6 +94,17 @@
                                     </span>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'biblioteca:meus_livros' %}"
+                                >
+                                    <span class="nav-link-title">
+                                        Meus livros
+                                    </span>
+                                </a>
+                            </li>
                         {% endif %}
 
                         {% if perms.biblioteca.view_livro %}

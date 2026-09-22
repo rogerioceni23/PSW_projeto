@@ -148,7 +148,7 @@ urlpatterns = [
         name="usuario_excluir",
     ),
 
-    # Vínculos entre usuários e livros
+    
     path(
         "usuarios-livros/",
         views.usuario_livro_listar,
@@ -174,4 +174,10 @@ urlpatterns = [
         views.usuario_livro_excluir,
         name="usuario_livro_excluir",
     ),
+
+   path(
+    	"meus-livros/",
+    	views.meus_livros,
+    	name="meus_livros",
+   ),
 ]

@@ -1,0 +1,101 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Meus livros | Biblioteca Digital{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="page-pretitle">
+                Área do Leitor
+            </div>
+
+            <h2 class="page-title">
+                Meus livros
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards mt-3">
+    {% for vinculo in vinculos %}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100">
+                {% if vinculo.livro.capa %}
+                    <img
+                        src="{{ vinculo.livro.capa.url }}"
+                        alt="Capa de {{ vinculo.livro.titulo }}"
+                        class="card-img-top"
+                        style="height: 260px; object-fit: cover;"
+                    >
+                {% endif %}
+
+                <div class="card-body">
+                    <h3 class="card-title">
+                        {{ vinculo.livro.titulo }}
+                    </h3>
+
+                    <p class="text-secondary">
+                        Vinculado em
+                        {{ vinculo.data_hora|date:"d/m/Y H:i" }}
+                    </p>
+
+                    <div class="mb-3">
+                        {% for autor in vinculo.livro.autores.all %}
+                            <span class="badge bg-blue-lt">
+                                {{ autor.nome }}
+                            </span>
+                        {% empty %}
+                            <span class="text-secondary">
+                                Autor não informado
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="btn-list">
+                        <a
+                            href="{% url 'biblioteca:livro_detalhar' vinculo.livro.id %}"
+                            class="btn btn-primary"
+                        >
+                            Ver detalhes
+                        </a>
+
+                        {% if vinculo.livro.arquivo_pdf %}
+                            <a
+                                href="{{ vinculo.livro.arquivo_pdf.url }}"
+                                class="btn btn-outline-primary"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                Abrir PDF
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="empty">
+                <p class="empty-title">
+                    Nenhum livro vinculado
+                </p>
+
+                <p class="empty-subtitle text-secondary">
+                    Quando um livro for associado à sua conta,
+                    ele aparecerá aqui.
+                </p>
+
+                <div class="empty-action">
+                    <a
+                        href="{% url 'biblioteca:livro_listar' %}"
+                        class="btn btn-primary"
+                    >
+                        Consultar catálogo
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
