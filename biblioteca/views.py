@@ -36,6 +36,40 @@ def painel(request):
         contexto,
     )
 
+def pagina_inicial(request):
+    if request.user.is_authenticated:
+        if request.user.has_perm("biblioteca.view_usuario"):
+            return redirect("biblioteca:painel")
+
+        return redirect("biblioteca:inicio")
+
+    return render(
+        request,
+        "biblioteca/pagina_inicial.html",
+    )
+
+@login_required
+def inicio(request):
+    livros_recentes = Livro.objects.prefetch_related(
+        "autores",
+        "categorias",
+    ).order_by("-id")[:6]
+
+    quantidade_meus_livros = UsuarioLivro.objects.filter(
+        usuario=request.user,
+    ).count()
+
+    contexto = {
+        "livros_recentes": livros_recentes,
+        "quantidade_meus_livros": quantidade_meus_livros,
+    }
+
+    return render(
+        request,
+        "biblioteca/leitor/inicio.html",
+        contexto,
+    )
+
 def cadastrar_leitor(request):
     if request.user.is_authenticated:
         return redirect("biblioteca:livro_listar")
@@ -69,9 +103,13 @@ def cadastrar_leitor(request):
         "biblioteca/autenticacao/cadastrar.html",
         {"form": form},
     )
+
 def entrar(request):
     if request.user.is_authenticated:
-        return redirect("biblioteca:livro_listar")
+        if request.user.has_perm("biblioteca.view_usuario"):
+            return redirect("biblioteca:painel")
+
+        return redirect("biblioteca:inicio")
 
     form = AuthenticationForm(
         request,
@@ -95,21 +133,24 @@ def entrar(request):
     )
 
     if request.method == "POST" and form.is_valid():
-        login(request, form.get_user())
+        usuario = form.get_user()
+        login(request, usuario)
 
         messages.success(
             request,
             "Login realizado com sucesso.",
         )
 
-        return redirect("biblioteca:livro_listar")
+        if usuario.has_perm("biblioteca.view_usuario"):
+            return redirect("biblioteca:painel")
+
+        return redirect("biblioteca:inicio")
 
     return render(
         request,
         "biblioteca/autenticacao/entrar.html",
         {"form": form},
     )
-
 
 @login_required
 def sair(request):

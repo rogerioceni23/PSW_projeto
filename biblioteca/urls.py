@@ -5,6 +5,18 @@ from . import views
 app_name = "biblioteca"
 
 urlpatterns = [
+
+    path(
+    	"",
+    	views.pagina_inicial,
+    	name="pagina_inicial",
+    ),
+    path(
+    	"inicio/",
+    	views.inicio,
+    	name="inicio",
+    ),
+
     path(
         "painel/",
         views.painel,

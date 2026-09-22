@@ -1,0 +1,95 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Biblioteca Digital</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'tabler/css/tabler.min.css' %}"
+    >
+</head>
+
+<body>
+    <div class="page">
+
+        <header class="navbar navbar-expand-md">
+            <div class="container-xl">
+                <span class="navbar-brand">
+                    Biblioteca Digital
+                </span>
+
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="btn-list">
+                        <a
+                            href="{% url 'biblioteca:entrar' %}"
+                            class="btn btn-outline-primary"
+                        >
+                            Entrar
+                        </a>
+
+                        <a
+                            href="{% url 'biblioteca:cadastrar_leitor' %}"
+                            class="btn btn-primary"
+                        >
+                            Criar conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-wrapper">
+            <div class="page-body">
+                <div class="container-xl">
+
+                    <div class="card bg-primary-lt">
+                        <div class="card-body py-5 text-center">
+                            <h1 class="display-5">
+                                Bem-vindo à Biblioteca Digital
+                            </h1>
+
+                            <p class="fs-3 text-secondary">
+                                Consulte livros, autores e categorias em um só lugar.
+                            </p>
+
+                            <p class="text-secondary">
+                                Entre no sistema ou crie uma conta de Leitor
+                                para acessar o catálogo da biblioteca.
+                            </p>
+
+                            <div class="btn-list justify-content-center mt-4">
+                                <a
+                                    href="{% url 'biblioteca:entrar' %}"
+                                    class="btn btn-primary"
+                                >
+                                    Entrar no sistema
+                                </a>
+
+                                <a
+                                    href="{% url 'biblioteca:cadastrar_leitor' %}"
+                                    class="btn btn-outline-primary"
+                                >
+                                    Criar conta de Leitor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+</body>
+</html>

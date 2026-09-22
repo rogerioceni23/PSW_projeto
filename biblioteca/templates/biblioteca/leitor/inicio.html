@@ -1,0 +1,93 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Início | Biblioteca Digital{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="page-pretitle">
+                Área do Leitor
+            </div>
+
+            <h2 class="page-title">
+                Olá, {{ request.user.nome|default:request.user.username }}
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards mt-3">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-secondary">
+                    Livros vinculados à sua conta
+                </div>
+
+                <div class="h1">
+                    {{ quantidade_meus_livros }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-header mt-4">
+    <h2 class="page-title">
+        Livros adicionados recentemente
+    </h2>
+</div>
+
+<div class="row row-cards mt-2">
+    {% for livro in livros_recentes %}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100">
+                {% if livro.capa %}
+                    <img
+                        src="{{ livro.capa.url }}"
+                        alt="Capa de {{ livro.titulo }}"
+                        class="card-img-top"
+                        style="height: 260px; object-fit: cover;"
+                    >
+                {% endif %}
+
+                <div class="card-body">
+                    <h3 class="card-title">
+                        {{ livro.titulo }}
+                    </h3>
+
+                    <p class="text-secondary">
+                        {{ livro.descricao|truncatewords:20 }}
+                    </p>
+
+                    <div class="mb-3">
+                        {% for autor in livro.autores.all %}
+                            <span class="badge bg-blue-lt">
+                                {{ autor.nome }}
+                            </span>
+                        {% empty %}
+                            <span class="text-secondary">
+                                Autor não informado
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <a
+                        href="{% url 'biblioteca:livro_detalhar' livro.id %}"
+                        class="btn btn-primary"
+                    >
+                        Ver livro
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Nenhum livro cadastrado.
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
