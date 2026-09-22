@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.models import Group
 
 from .forms import (
     AutorForm,
@@ -11,6 +12,7 @@ from .forms import (
     UsuarioCriacaoForm,
     UsuarioEdicaoForm,
     UsuarioLivroForm,
+    CadastroLeitorForm,
 )
 from .models import Autor, Categoria, Livro, Usuario, UsuarioLivro
 
@@ -34,7 +36,39 @@ def painel(request):
         contexto,
     )
 
+def cadastrar_leitor(request):
+    if request.user.is_authenticated:
+        return redirect("biblioteca:livro_listar")
 
+    if request.method == "POST":
+        form = CadastroLeitorForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+            usuario = form.save()
+
+            grupo_leitor, _ = Group.objects.get_or_create(
+                name="Leitor",
+            )
+
+            usuario.groups.add(grupo_leitor)
+
+            messages.success(
+                request,
+                "Conta criada com sucesso. Agora você pode entrar.",
+            )
+
+            return redirect("biblioteca:entrar")
+    else:
+        form = CadastroLeitorForm()
+
+    return render(
+        request,
+        "biblioteca/autenticacao/cadastrar.html",
+        {"form": form},
+    )
 def entrar(request):
     if request.user.is_authenticated:
         return redirect("biblioteca:livro_listar")

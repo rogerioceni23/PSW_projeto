@@ -1,0 +1,96 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Criar conta | Biblioteca Digital</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'tabler/css/tabler.min.css' %}"
+    >
+</head>
+
+<body>
+    <div class="page page-center">
+        <div class="container container-tight py-4">
+
+            <div class="text-center mb-4">
+                <h1>Biblioteca Digital</h1>
+            </div>
+
+            <form
+                method="post"
+                enctype="multipart/form-data"
+                class="card card-md"
+            >
+                {% csrf_token %}
+
+                <div class="card-body">
+                    <h2 class="h2 text-center mb-4">
+                        Criar conta de Leitor
+                    </h2>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for campo in form %}
+                        <div class="mb-3">
+                            <label
+                                class="form-label"
+                                for="{{ campo.id_for_label }}"
+                            >
+                                {{ campo.label }}
+                            </label>
+
+                            {{ campo }}
+
+                            {% if campo.help_text %}
+                                <div class="form-hint">
+                                    {{ campo.help_text }}
+                                </div>
+                            {% endif %}
+
+                            {% for erro in campo.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ erro }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-footer">
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            Criar conta
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center text-secondary mt-3">
+                Já possui uma conta?
+
+                <a href="{% url 'biblioteca:entrar' %}">
+                    Entrar
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+</body>
+</html>

@@ -4,12 +4,6 @@ from . import views
 
 app_name = "biblioteca"
 
-from django.urls import path
-
-from . import views
-
-app_name = "biblioteca"
-
 urlpatterns = [
     path(
         "painel/",
@@ -20,7 +14,15 @@ urlpatterns = [
         "entrar/",
         views.entrar,
         name="entrar",
-    ),    path(
+    ),
+
+    path(
+    	"cadastrar/",
+    	views.cadastrar_leitor,
+    	name="cadastrar_leitor",
+    ),
+
+    path(
         "sair/",
         views.sair,
         name="sair",
