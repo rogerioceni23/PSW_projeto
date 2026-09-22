@@ -1,0 +1,106 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Detalhes do usuário{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Detalhes do usuário</h2>
+        </div>
+
+        <div class="col-auto ms-auto">
+            <div class="btn-list">
+                {% if perms.biblioteca.change_usuario %}
+                    <a
+                        href="{% url 'biblioteca:usuario_editar' usuario.id %}"
+                        class="btn btn-warning"
+                    >
+                        Editar
+                    </a>
+                {% endif %}
+
+                {% if perms.biblioteca.delete_usuario %}
+                    <a
+                        href="{% url 'biblioteca:usuario_excluir' usuario.id %}"
+                        class="btn btn-danger"
+                    >
+                        Excluir
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                {% if usuario.foto %}
+                    <img
+                        src="{{ usuario.foto.url }}"
+                        alt="Foto de {{ usuario.nome }}"
+                        class="img-fluid rounded"
+                    >
+                {% else %}
+                    <div class="avatar avatar-xl">
+                        {{ usuario.username|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-9">
+                <dl class="row">
+                    <dt class="col-sm-3">Usuário</dt>
+                    <dd class="col-sm-9">{{ usuario.username }}</dd>
+
+                    <dt class="col-sm-3">Nome</dt>
+                    <dd class="col-sm-9">{{ usuario.nome|default:"Não informado" }}</dd>
+
+                    <dt class="col-sm-3">RG</dt>
+                    <dd class="col-sm-9">{{ usuario.rg|default:"Não informado" }}</dd>
+
+                    <dt class="col-sm-3">CPF</dt>
+                    <dd class="col-sm-9">{{ usuario.cpf|default:"Não informado" }}</dd>
+
+                    <dt class="col-sm-3">Endereço</dt>
+                    <dd class="col-sm-9">{{ usuario.endereco|default:"Não informado" }}</dd>
+
+                    <dt class="col-sm-3">Descrição</dt>
+                    <dd class="col-sm-9">{{ usuario.descricao|default:"Não informada" }}</dd>
+
+                    <dt class="col-sm-3">Grupos</dt>
+                    <dd class="col-sm-9">
+                        {% for grupo in usuario.groups.all %}
+                            <span class="badge bg-blue-lt">
+                                {{ grupo.name }}
+                            </span>
+                        {% empty %}
+                            Nenhum grupo
+                        {% endfor %}
+                    </dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        {% if usuario.is_active %}
+                            <span class="badge bg-success-lt">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-danger-lt">Inativo</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <a
+            href="{% url 'biblioteca:usuario_listar' %}"
+            class="btn btn-outline-secondary"
+        >
+            Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}

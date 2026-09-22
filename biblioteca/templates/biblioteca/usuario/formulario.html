@@ -1,0 +1,70 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}
+    {% if usuario %}Editar usuário{% else %}Cadastrar usuário{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                {% if usuario %}
+                    Editar usuário
+                {% else %}
+                    Cadastrar usuário
+                {% endif %}
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for campo in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+
+                    {{ campo }}
+
+                    {% if campo.help_text %}
+                        <div class="form-hint">
+                            {{ campo.help_text }}
+                        </div>
+                    {% endif %}
+
+                    {% for erro in campo.errors %}
+                        <div class="text-danger mt-1">
+                            {{ erro }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="btn-list">
+                <button type="submit" class="btn btn-primary">
+                    Salvar
+                </button>
+
+                <a
+                    href="{% url 'biblioteca:usuario_listar' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
