@@ -1,5 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import (
+    PasswordChangeForm,
+    UserCreationForm,
+)
 
 from .models import (
     Autor,
@@ -156,3 +159,54 @@ class UsuarioEdicaoForm(
                 attrs={"rows": 4}
             ),
         }
+
+
+class CadastroLeitorForm(
+    FormularioTablerMixin,
+    UserCreationForm,
+):
+    class Meta:
+        model = Usuario
+        fields = [
+            "username",
+            "nome",
+            "rg",
+            "cpf",
+            "endereco",
+            "foto",
+            "descricao",
+        ]
+        widgets = {
+            "descricao": forms.Textarea(
+                attrs={"rows": 4}
+            ),
+        }
+
+
+class PerfilUsuarioForm(
+    FormularioTablerMixin,
+    forms.ModelForm,
+):
+    class Meta:
+        model = Usuario
+        fields = [
+            "username",
+            "nome",
+            "rg",
+            "cpf",
+            "endereco",
+            "foto",
+            "descricao",
+        ]
+        widgets = {
+            "descricao": forms.Textarea(
+                attrs={"rows": 4}
+            ),
+        }
+
+
+class AlterarSenhaForm(
+    FormularioTablerMixin,
+    PasswordChangeForm,
+):
+    pass
