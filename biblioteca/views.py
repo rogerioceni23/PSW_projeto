@@ -7,12 +7,13 @@ from django.contrib.auth.models import Group
 
 from .forms import (
     AutorForm,
+    CadastroLeitorForm,
     CategoriaForm,
     LivroForm,
+    PerfilUsuarioForm,
     UsuarioCriacaoForm,
     UsuarioEdicaoForm,
     UsuarioLivroForm,
-    CadastroLeitorForm,
 )
 from .models import Autor, Categoria, Livro, Usuario, UsuarioLivro
 
@@ -48,18 +49,25 @@ def pagina_inicial(request):
         "biblioteca/pagina_inicial.html",
     )
 
+
 @login_required
 def inicio(request):
+    usuario = get_object_or_404(
+        Usuario,
+        pk=request.user.pk,
+    )
+
     livros_recentes = Livro.objects.prefetch_related(
         "autores",
         "categorias",
     ).order_by("-id")[:6]
 
     quantidade_meus_livros = UsuarioLivro.objects.filter(
-        usuario=request.user,
+        usuario=usuario,
     ).count()
 
     contexto = {
+        "usuario": usuario,
         "livros_recentes": livros_recentes,
         "quantidade_meus_livros": quantidade_meus_livros,
     }
@@ -69,6 +77,7 @@ def inicio(request):
         "biblioteca/leitor/inicio.html",
         contexto,
     )
+
 
 def cadastrar_leitor(request):
     if request.user.is_authenticated:
@@ -743,10 +752,16 @@ def erro_permissao(request, exception=None):
         status=403,
     )
 
+
 @login_required
 def meus_livros(request):
+    usuario = get_object_or_404(
+        Usuario,
+        pk=request.user.pk,
+    )
+
     vinculos = UsuarioLivro.objects.filter(
-        usuario=request.user,
+        usuario=usuario,
     ).select_related(
         "livro",
     ).prefetch_related(
@@ -757,5 +772,58 @@ def meus_livros(request):
     return render(
         request,
         "biblioteca/leitor/meus_livros.html",
-        {"vinculos": vinculos},
+        {
+            "usuario": usuario,
+            "vinculos": vinculos,
+        },
+    )
+
+
+@login_required
+def perfil(request):
+    usuario = get_object_or_404(
+        Usuario,
+        pk=request.user.pk,
+    )
+
+    return render(
+        request,
+        "biblioteca/leitor/perfil.html",
+        {"usuario": usuario},
+    )
+
+
+@login_required
+def perfil_editar(request):
+    usuario = get_object_or_404(
+        Usuario,
+        pk=request.user.pk,
+    )
+
+    if request.method == "POST":
+        form = PerfilUsuarioForm(
+            request.POST,
+            request.FILES,
+            instance=usuario,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Perfil atualizado com sucesso.",
+            )
+
+            return redirect("biblioteca:perfil")
+    else:
+        form = PerfilUsuarioForm(instance=usuario)
+
+    return render(
+        request,
+        "biblioteca/leitor/perfil_editar.html",
+        {
+            "form": form,
+            "usuario": usuario,
+        },
     )

@@ -1,0 +1,82 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Meu perfil | Biblioteca Digital{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="page-pretitle">
+                Área do Leitor
+            </div>
+
+            <h2 class="page-title">
+                Meu perfil
+            </h2>
+        </div>
+
+        <div class="col-auto ms-auto">
+            <a
+                href="{% url 'biblioteca:perfil_editar' %}"
+                class="btn btn-primary"
+            >
+                Editar perfil
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                {% if usuario.foto %}
+                    <img
+                        src="{{ usuario.foto.url }}"
+                        alt="Foto de {{ usuario.nome }}"
+                        class="img-fluid rounded"
+                    >
+                {% else %}
+                    <div class="avatar avatar-xl">
+                        {{ usuario.username|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-9">
+                <dl class="row">
+                    <dt class="col-sm-3">Usuário</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.username }}
+                    </dd>
+
+                    <dt class="col-sm-3">Nome</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.nome }}
+                    </dd>
+
+                    <dt class="col-sm-3">RG</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.rg }}
+                    </dd>
+
+                    <dt class="col-sm-3">CPF</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.cpf }}
+                    </dd>
+
+                    <dt class="col-sm-3">Endereço</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.endereco }}
+                    </dd>
+
+                    <dt class="col-sm-3">Descrição</dt>
+                    <dd class="col-sm-9">
+                        {{ usuario.descricao }}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

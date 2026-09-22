@@ -180,4 +180,15 @@ urlpatterns = [
     	views.meus_livros,
     	name="meus_livros",
    ),
+
+   path(
+    	"perfil/",
+    	views.perfil,
+    	name="perfil",
+   ),
+   path(
+    	"perfil/editar/",
+    	views.perfil_editar,
+    	name="perfil_editar",
+   ),
 ]
