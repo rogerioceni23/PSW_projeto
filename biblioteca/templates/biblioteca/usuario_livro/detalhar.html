@@ -1,0 +1,68 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Detalhes do vínculo{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Detalhes do vínculo</h2>
+        </div>
+
+        <div class="col-auto ms-auto">
+            <div class="btn-list">
+                {% if perms.biblioteca.change_usuariolivro %}
+                    <a
+                        href="{% url 'biblioteca:usuario_livro_editar' vinculo.id %}"
+                        class="btn btn-warning"
+                    >
+                        Editar
+                    </a>
+                {% endif %}
+
+                {% if perms.biblioteca.delete_usuariolivro %}
+                    <a
+                        href="{% url 'biblioteca:usuario_livro_excluir' vinculo.id %}"
+                        class="btn btn-danger"
+                    >
+                        Excluir
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Usuário</dt>
+            <dd class="col-sm-9">
+                {{ vinculo.usuario.username }}
+                {% if vinculo.usuario.nome %}
+                    — {{ vinculo.usuario.nome }}
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Livro</dt>
+            <dd class="col-sm-9">
+                {{ vinculo.livro.titulo }}
+            </dd>
+
+            <dt class="col-sm-3">Data e hora</dt>
+            <dd class="col-sm-9">
+                {{ vinculo.data_hora|date:"d/m/Y H:i" }}
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <a
+            href="{% url 'biblioteca:usuario_livro_listar' %}"
+            class="btn btn-outline-secondary"
+        >
+            Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Livros dos usuários{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Livros dos usuários</h2>
+            <div class="text-secondary">
+                Relações cadastradas entre usuários e livros
+            </div>
+        </div>
+
+        {% if perms.biblioteca.add_usuariolivro %}
+            <div class="col-auto ms-auto">
+                <a
+                    href="{% url 'biblioteca:usuario_livro_criar' %}"
+                    class="btn btn-primary"
+                >
+                    Novo vínculo
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Livro</th>
+                    <th>Data e hora</th>
+                    <th class="w-1">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for vinculo in vinculos %}
+                    <tr>
+                        <td>
+                            {{ vinculo.usuario.username }}
+                        </td>
+
+                        <td>
+                            {{ vinculo.livro.titulo }}
+                        </td>
+
+                        <td>
+                            {{ vinculo.data_hora|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td>
+                            <div class="btn-list flex-nowrap">
+                                {% if perms.biblioteca.view_usuariolivro %}
+                                    <a
+                                        href="{% url 'biblioteca:usuario_livro_detalhar' vinculo.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+                                        Ver
+                                    </a>
+                                {% endif %}
+
+                                {% if perms.biblioteca.change_usuariolivro %}
+                                    <a
+                                        href="{% url 'biblioteca:usuario_livro_editar' vinculo.id %}"
+                                        class="btn btn-sm btn-outline-warning"
+                                    >
+                                        Editar
+                                    </a>
+                                {% endif %}
+
+                                {% if perms.biblioteca.delete_usuariolivro %}
+                                    <a
+                                        href="{% url 'biblioteca:usuario_livro_excluir' vinculo.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+                                        Excluir
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-secondary">
+                            Nenhum vínculo cadastrado.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

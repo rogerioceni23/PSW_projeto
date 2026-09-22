@@ -13,12 +13,12 @@ from .forms import (
 )
 from .models import Autor, Categoria, Livro, Usuario, UsuarioLivro
 
-
 @login_required
+@permission_required(
+    "biblioteca.view_usuario",
+    raise_exception=True,
+)
 def painel(request):
-    if not request.user.is_staff:
-        raise PermissionDenied
-
     contexto = {
         "quantidade_livros": Livro.objects.count(),
         "quantidade_autores": Autor.objects.count(),

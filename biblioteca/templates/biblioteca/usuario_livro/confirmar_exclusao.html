@@ -1,0 +1,41 @@
+{% extends "biblioteca/base.html" %}
+
+{% block title %}Excluir vínculo{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2 class="page-title">Excluir vínculo</h2>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="alert alert-danger">
+            Tem certeza de que deseja remover o vínculo entre
+            <strong>{{ vinculo.usuario.username }}</strong>
+            e o livro
+            <strong>{{ vinculo.livro.titulo }}</strong>?
+        </div>
+
+        <p class="text-secondary">
+            Essa operação não poderá ser desfeita.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="btn-list">
+                <button type="submit" class="btn btn-danger">
+                    Confirmar exclusão
+                </button>
+
+                <a
+                    href="{% url 'biblioteca:usuario_livro_detalhar' vinculo.id %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
