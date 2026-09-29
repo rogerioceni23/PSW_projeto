@@ -102,3 +102,10 @@ Depois de iniciar o servidor, confira a página pública, o cadastro e login de 
 ## Colaboração
 
 O código é compartilhado no mesmo repositório. Cada integrante sincroniza a branch `main` antes de trabalhar e registra somente suas próprias alterações em commits com mensagens claras. O histórico do Git mostra as contribuições efetivas de cada pessoa.
+
+## Vídeo de demonstração
+
+O vídeo apresenta as telas da aplicação, os cinco CRUDs
+e os perfis de acesso de leitor e bibliotecário.
+
+[Assistir à demonstração no YouTube](https://youtu.be/btfmiIFdayw)
